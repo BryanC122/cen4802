@@ -26,9 +26,9 @@ public class TaskServlet extends HttpServlet {
 
         out.println("<h2>Tasks</h2>");
         out.println("<ul>");
-        out.println("<li>Finish Assignments</li>");
-        out.println("<li>Study For Test</li>");
-        out.println("<li>Clean up</li>");
+        out.println("<li>Finish Assignments - Not Completed</li>");
+        out.println("<li>Study For Test - Not Completed</li>");
+        out.println("<li>Clean Up - Not Completed</li>");
         out.println("</ul>");
 
         out.println("</body>");
