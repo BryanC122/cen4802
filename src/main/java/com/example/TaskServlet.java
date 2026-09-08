@@ -45,7 +45,7 @@ public class TaskServlet extends HttpServlet {
         out.println("<html>");
         out.println("<head><title>Task Tracker</title></head>");
         out.println("<body>");
-        out.println("<h1>My Task Tracker</h1>");
+        out.println("<h1>My Task Tracker - Maven Build</h1>");
         out.println("<h2>Tasks</h2>");
         out.println("<ul>");
 
