@@ -31,7 +31,7 @@ class TaskServletTest {
 
         assertTrue(output.contains("Finish Assignments"));
         assertTrue(output.contains("Study For Exam"));
-        assertTrue(output.contains("Clean Up"));
+        assertTrue(output.contains("Organize Office"));
     }
 
     @Test
