@@ -16,7 +16,7 @@ public class TaskServlet extends HttpServlet {
     public TaskServlet() {
         tasks.add("Finish Assignments");
         tasks.add("Study For Exam");
-        tasks.add("Organize Office");
+        tasks.add("Repair Computer");
     }
 
     @Override
