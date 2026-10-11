@@ -15,7 +15,7 @@ public class TaskServlet extends HttpServlet {
     private final List<String> tasks = new ArrayList<>();
 
     public TaskServlet() {
-        tasks.add("Finish Assignments");
+        tasks.add("Finish Homework");
         tasks.add("Study For Exam");
         tasks.add("Repair Computer");
     }
