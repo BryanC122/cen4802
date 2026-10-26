@@ -9,8 +9,13 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class TaskServlet extends HttpServlet {
+
+    private static final Logger LOGGER =
+            Logger.getLogger(TaskServlet.class.getName());
 
     private final List<String> tasks = new ArrayList<>();
 
@@ -18,6 +23,9 @@ public class TaskServlet extends HttpServlet {
         tasks.add("Finish Assignments");
         tasks.add("Study For Exam");
         tasks.add("Repair Computer");
+
+        LOGGER.info("TaskServlet initialized. Initial task count: "
+                + tasks.size());
     }
 
     @Override
@@ -31,18 +39,36 @@ public class TaskServlet extends HttpServlet {
             try {
                 int index = Integer.parseInt(complete);
 
-                if (index >= 0 && index < tasks.size()
-                        && !tasks.get(index).endsWith(" - Completed")) {
-                    tasks.set(index, tasks.get(index) + " - Completed");
+                if (index < 0 || index >= tasks.size()) {
+                    LOGGER.warning("Invalid task completion index: "
+                            + index + ". Current task count: " + tasks.size());
+                    response.sendRedirect("/tasks");
+                    return;
                 }
+
+                if (!tasks.get(index).endsWith(" - Completed")) {
+                    tasks.set(index, tasks.get(index) + " - Completed");
+
+                    LOGGER.info("Task marked completed. Index: " + index
+                            + ", task: " + tasks.get(index));
+                } else {
+                    LOGGER.info("Task was already completed. Index: "
+                            + index);
+                }
+
             } catch (NumberFormatException e) {
-                response.sendError(HttpServletResponse.SC_BAD_REQUEST);
+                LOGGER.log(Level.WARNING,
+                        "Invalid completion parameter: " + complete, e);
+                response.sendError(HttpServletResponse.SC_BAD_REQUEST,
+                        "Task index must be a number.");
                 return;
             }
 
             response.sendRedirect("/tasks");
             return;
         }
+
+        LOGGER.info("Task list requested. Task count: " + tasks.size());
 
         response.setContentType("text/html;charset=UTF-8");
 
@@ -65,7 +91,8 @@ public class TaskServlet extends HttpServlet {
             out.println(escapeHtml(tasks.get(i)));
 
             if (!tasks.get(i).endsWith(" - Completed")) {
-                out.println(" <a href='/tasks?complete=" + i + "'>Mark Complete</a>");
+                out.println(" <a href='/tasks?complete=" + i
+                        + "'>Mark Complete</a>");
             }
 
             out.println("</li>");
@@ -86,12 +113,31 @@ public class TaskServlet extends HttpServlet {
         String task = request.getParameter("task");
 
         if (task == null || task.isBlank()) {
+            LOGGER.warning("Task creation rejected: task name is missing "
+                    + "or blank.");
+
             response.sendError(HttpServletResponse.SC_BAD_REQUEST,
                     "Task name is required.");
             return;
         }
 
-        tasks.add(task.trim());
+        String taskName = task.trim();
+
+        try {
+            tasks.add(taskName);
+
+            LOGGER.info("Task added successfully. Task name: \""
+                    + taskName + "\", total tasks: " + tasks.size());
+
+        } catch (RuntimeException e) {
+            LOGGER.log(Level.SEVERE,
+                    "Unexpected error while adding a task.", e);
+
+            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR,
+                    "Unable to add task.");
+            return;
+        }
+
         response.sendRedirect("/tasks");
     }
 
