@@ -87,10 +87,12 @@ public class TaskServlet extends HttpServlet {
         out.println("<ul>");
 
         for (int i = 0; i < tasks.size(); i++) {
-            out.println("<li>");
-            out.println(escapeHtml(tasks.get(i)));
+            String task = tasks.get(i);
 
-            if (!tasks.get(i).endsWith(" - Completed")) {
+            out.println("<li>");
+            out.println(escapeHtml(task));
+
+            if (!task.endsWith(" - Completed")) {
                 out.println(" <a href='/tasks?complete=" + i
                         + "'>Mark Complete</a>");
             }
